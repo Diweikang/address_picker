@@ -1,0 +1,16 @@
+<view class="areas_group">
+	<view class="areas_group-send">
+		<text>原寄地</text>
+		<icon/>
+	</view>
+	<view class="areas_group-search">
+		<icon/>
+		<input type="text" placeholder="中文或拼音首字母输入，如：西安 或 XA" />
+		<view class="areas_group-tab">
+			<view class="areas_group-tab-item">内地</view>
+			<view class="areas_group-tab-item">港澳台</view>
+			<view class="areas_group-tab-item">国际</view>
+		</view>
+	</view>
+</view>
+

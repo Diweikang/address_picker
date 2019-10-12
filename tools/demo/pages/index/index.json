@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "areas-group": "../../components/areas-group/areas-group"
+  }
+}
