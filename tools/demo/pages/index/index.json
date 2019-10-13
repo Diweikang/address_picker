@@ -1,5 +1,8 @@
 {
   "usingComponents": {
-    "areas-group": "../../components/areas-group/areas-group"
+    "areas-group": "/components/areas-group/areas-group",
+    "location": "/components/location/location",
+    "hot-citys": "/components/hot-citys/hot-citys",
+    "city-columns": "/components/city-columns/city-columns"
   }
 }

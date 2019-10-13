@@ -1,4 +1,21 @@
-<view class="b">
-	你好，我是b
+<view class="hotCity">
+  <view class="hotCity_text">热门城市</view>
+  <view class="hotCity_city">
+    <view class="hotCity_city-item">
+      上海
+    </view>
+    <view class="hotCity_city-item">
+      上海
+    </view>
+    <view class="hotCity_city-item">
+      上海
+    </view>
+    <view class="hotCity_city-item">
+      上海
+    </view>
+    <view class="hotCity_city-item">
+      上海
+    </view>
+  </view>
 </view>
 

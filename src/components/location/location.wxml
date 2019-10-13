@@ -1,0 +1,9 @@
+<view class="location">
+  <view class="location_text">当前/历史</view>
+  <view class="location_city">
+    <icon class="location_city-icon" />
+    <view class="location_city-text">
+      西安市-雁塔区
+    </view>
+  </view>
+</view>

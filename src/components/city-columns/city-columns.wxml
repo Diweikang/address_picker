@@ -1,0 +1,18 @@
+<view class="city_columns">
+  <view class="city_columns-tab">
+    <view class="city_columns-tabItem">
+      省/直辖市
+    </view>
+    <view class="city_columns-tabItem">
+      请选择
+    </view>
+    <view class="city_columns-confirm">
+      确定
+    </view>
+  </view>
+  <view class="city_columns-inner">
+    <view class="city_columns-item">
+      安徽省
+    </view>
+  </view>
+</view>
