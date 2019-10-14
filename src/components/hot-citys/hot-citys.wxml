@@ -1,21 +1,15 @@
 <view class="hotCity">
-  <view class="hotCity_text">热门城市</view>
-  <view class="hotCity_city">
-    <view class="hotCity_city-item">
-      上海
-    </view>
-    <view class="hotCity_city-item">
-      上海
-    </view>
-    <view class="hotCity_city-item">
-      上海
-    </view>
-    <view class="hotCity_city-item">
-      上海
-    </view>
-    <view class="hotCity_city-item">
-      上海
-    </view>
-  </view>
+	<view class="hotCity_text">热门城市</view>
+	<view class="hotCity_city">
+		<view
+		 bindtap="selected"
+		 data-code="{{item.code}}"
+		 wx:for="{{hotCitys}}"
+		 wx:key="{{code}}"
+		 class="hotCity_city-item {{selectedCode == item.code ? 'active' : ''}}"
+		>
+			{{item.name}}
+		</view>
+	</view>
 </view>
 

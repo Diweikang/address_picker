@@ -1,0 +1,9 @@
+{
+  "component": true,
+  "usingComponents": {
+    "areas-group": "../areas-group/areas-group",
+    "location": "../location/location",
+    "hot-citys": "../hot-citys/hot-citys",
+    "city-columns": "../city-columns/city-columns"
+  }
+}

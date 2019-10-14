@@ -6,11 +6,17 @@
 	<view class="areas_group-search">
 		<icon/>
 		<input class="areas_group-search-input" type="text" placeholder="中文或拼音首字母输入，如：西安 或 XA" />
-  </view>
-  <view class="areas_group-tab">
-    <view class="areas_group-tab-item active">内地</view>
-    <view class="areas_group-tab-item">港澳台</view>
-    <view class="areas_group-tab-item">国际</view>
-  </view>
+	</view>
+	<view class="areas_group-tab">
+		<view
+		 bindtap="changeTab"
+		 data-item="{{item}}"
+		 wx:for="{{groups}}"
+		 wx:key="{{code}}"
+		 class="areas_group-tab-item {{selectedIndex == item.code ? 'active' : ''}}"
+		>{{item.name}}
+		</view>
+	</view>
 </view>
+<view class="areas-group_back" />
 
