@@ -11,7 +11,6 @@ Component({
             [selectedLevel]: newVal
           })
         }
-        console.log(this.data.citys)
       }
     }
   },

@@ -15,9 +15,10 @@
 	</view>
 	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{toView}}">
 		<view
+     wx:if="{{citys[selectedLevel].length}}"
 		 data-item="{{item}}"
 		 bindtap="slecteItem"
-		 wx:for="{{cityColumns}}"
+		 wx:for="{{citys[selectedLevel]}}"
 		 wx:key="code"
 		 id="{{ 'id' + item.code}}"
 		 class="city_columns-item {{cityCode == item.code ? 'active_item' : ''}}"
