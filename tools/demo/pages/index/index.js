@@ -3,7 +3,8 @@ Page({
   data: {
     groups: [],
     hotCitys: [],
-    cityColumns: []
+    cityColumns: [],
+    hotCity: {}
   },
   onLoad() {
     this.getGroup()
@@ -66,7 +67,7 @@ Page({
   getColumnValue(data) {
     let addressType = data.detail.addressType
     let groupCode = data.detail.groupCode
-    let level = data.detail.level
+    let level = data.detail.level + 1
     let parentCode = data.detail.code
     this.getCityColumns({type: 2, addressType, groupCode, level, parentCode}).then(res => {
       this.data.cityColumns = res
@@ -74,5 +75,18 @@ Page({
         cityColumns: this.data.cityColumns
       })
     })
+  },
+  // 当选中热门城市时
+  selectHotCity(data) {
+    this.setData({
+      hotCity: data.detail
+    })
+    this.getColumnValue(data)
+  },
+  // 清空热门城市的选中
+  clearHotChecked(data) {
+    if (data.detail == 0) {
+      this.selectComponent("#hotCity").clearSelected()
+    }
   }
 })

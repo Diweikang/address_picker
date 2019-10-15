@@ -3,7 +3,7 @@
 	<view class="hotCity_city">
 		<view
 		 bindtap="selected"
-		 data-code="{{item.code}}"
+		 data-item="{{item}}"
 		 wx:for="{{hotCitys}}"
 		 wx:key="{{code}}"
 		 class="hotCity_city-item {{selectedCode == item.code ? 'active' : ''}}"

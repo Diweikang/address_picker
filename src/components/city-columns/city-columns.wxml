@@ -5,7 +5,7 @@
 		 data-level="{{item.level}}"
 		 wx:for="{{tabArr}}"
 		 wx:key="{{level}}"
-		 class="city_columns-tabItem {{selectedLevel == item.level ? 'active' : ''}}"
+		 class="city_columns-tabItem {{selectedTab == item.level ? 'active' : ''}}"
 		>
 			{{item.name}}
 		</view>
@@ -15,10 +15,10 @@
 	</view>
 	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{toView}}">
 		<view
-     wx:if="{{citys[selectedLevel].length}}"
+		 wx:if="{{citys[selectedTab].length}}"
 		 data-item="{{item}}"
 		 bindtap="slecteItem"
-		 wx:for="{{citys[selectedLevel]}}"
+		 wx:for="{{citys[selectedTab]}}"
 		 wx:key="code"
 		 id="{{ 'id' + item.code}}"
 		 class="city_columns-item {{cityCode == item.code ? 'active_item' : ''}}"

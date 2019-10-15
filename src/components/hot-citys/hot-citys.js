@@ -10,8 +10,15 @@ Component({
   },
   methods: {
     selected(e) {
+      const {item} = e.target.dataset
       this.setData({
-        selectedCode: e.target.dataset.code
+        selectedCode: item.code
+      })
+      this.triggerEvent('check', item)
+    },
+    clearSelected() {
+      this.setData({
+        selectedCode: ''
       })
     }
   }

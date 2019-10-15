@@ -1,7 +1,12 @@
 <view class="address-picker">
 	<areas-group bind:change="onChange" groups="{{groups}}" />
 	<location/>
-	<hot-citys hotCitys="{{hotCitys}}" />
-	<city-columns bind:select="getColumnValue" cityColumns="{{cityColumns}}" />
+	<hot-citys id="hotCity" bind:check="selectHotCity" hotCitys="{{hotCitys}}" />
+	<city-columns
+	 bind:select="getColumnValue"
+	 bind:clearHotChecked="clearHotChecked"
+	 hotCity="{{hotCity}}"
+	 cityColumns="{{cityColumns}}"
+	/>
 </view>
 
