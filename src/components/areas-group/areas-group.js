@@ -14,6 +14,9 @@ Component({
         selectedIndex: e.target.dataset.item.code
       })
       this.triggerEvent('change', e.target.dataset.item)
+    },
+    clickInput() {
+      this.triggerEvent('showSearch', false)
     }
   }
 })

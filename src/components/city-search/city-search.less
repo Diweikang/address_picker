@@ -1,0 +1,40 @@
+@font14: 14px;
+@fontFamily: PingFangSC-Regular,PingFangSC;
+@color1: rgba(0,0,0,1);
+.search {
+  .search_inner {
+    display: flex;
+    position: relative;
+    align-items: center;
+    height: 44px;
+    padding-left: 17px;
+    font-size: @font14;
+    box-shadow: 4px 4px 2px rgba(246,246,246,1);
+    .search_inner-icon {
+      position: absolute;
+      left: 28px;
+    }
+    .search_inner-input {
+      display: inline-block;
+      height: 34px;
+      width: 298px;
+      border-radius:6px;
+      background:rgba(246,246,246,1);
+      padding-left: 30px;
+      box-sizing: border-box;
+    }
+    .search_inner-cancel {
+      float: right;
+      color: rgba(61,150,255,1);
+      margin: 0 14px;
+    }
+  }
+  .search_list {
+    .search_list-item {
+      height: 56px;
+      font-size: @font14;
+      padding-left: 20px;
+      line-height: 56px;
+    }
+  }
+}

@@ -4,7 +4,10 @@ Page({
     groups: [],
     hotCitys: [],
     cityColumns: [],
-    hotCity: {}
+    hotCity: {},
+    isShowSearch: true,
+    searchCitys: [],
+    searchCity: {}
   },
   onLoad() {
     this.getGroup()
@@ -51,10 +54,26 @@ Page({
       addressType,
       parentCode
     }
-    return get('/api/v1/areas/search', data).then(res => {
+    get('/api/v1/areas/search', data).then(res => {
       this.data.cityColumns = res
       this.setData({
         cityColumns: this.data.cityColumns
+      })
+    })
+  },
+  // 搜索城市
+  querySearchCitys(searchData) {
+    let data = {
+      isHot: false,
+      pageSize: 10,
+      type: 2,
+      addressType: 2,
+      content: searchData.detail
+    }
+    return get('/api/v1/areas/search', data).then(res => {
+      this.data.searchCitys = res
+      this.setData({
+        searchCitys: this.data.searchCitys
       })
       return res
     })
@@ -65,28 +84,44 @@ Page({
   },
   // 选中的城市
   getColumnValue(data) {
-    let addressType = data.detail.addressType
-    let groupCode = data.detail.groupCode
-    let level = data.detail.level + 1
-    let parentCode = data.detail.code
-    this.getCityColumns({type: 2, addressType, groupCode, level, parentCode}).then(res => {
-      this.data.cityColumns = res
-      this.setData({
-        cityColumns: this.data.cityColumns
-      })
-    })
+    console.log(33333333333333333)
+    let addressType = data.addressType
+    let groupCode = data.groupCode
+    let level = data.level + 1
+    let parentCode = data.code
+    this.getCityColumns({type: 2, addressType, groupCode, level, parentCode})
   },
   // 当选中热门城市时
   selectHotCity(data) {
     this.setData({
       hotCity: data.detail
     })
-    this.getColumnValue(data)
+    this.getColumnValue(data.detail)
   },
   // 清空热门城市的选中
   clearHotChecked(data) {
     if (data.detail == 0) {
       this.selectComponent("#hotCity").clearSelected()
     }
+  },
+  // 当点击搜索框时触发的事件
+  showSearch(data) {
+    this.setData({
+      isShowSearch: data.detail
+    })
+  },
+  // 当点击搜索页面的取消时，隐藏搜索页
+  hideSearch(data) {
+    this.setData({
+      isShowSearch: data.detail
+    })
+  },
+  // 选中搜索结果项触发的事件
+  selectSearch(data) {
+    this.setData({
+      searchCity: data.detail
+    })
+    this.getColumnValue(data.detail.parents[1])
+    // this.getColumnValue(data.detail)
   }
 })

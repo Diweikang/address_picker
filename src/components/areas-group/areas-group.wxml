@@ -5,7 +5,13 @@
 	</view>
 	<view class="areas_group-search">
 		<icon/>
-		<input class="areas_group-search-input" type="text" placeholder="中文或拼音首字母输入，如：西安 或 XA" />
+		<input
+		 bindtap="clickInput"
+		 disabled="{{true}}"
+		 class="areas_group-search-input"
+		 type="text"
+		 placeholder="中文或拼音首字母输入，如：西安 或 XA"
+		/>
 	</view>
 	<view class="areas_group-tab">
 		<view

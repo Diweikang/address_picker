@@ -14,7 +14,7 @@ Component({
       this.setData({
         selectedCode: item.code
       })
-      this.triggerEvent('check', item)
+      this.triggerEvent('select', item)
     },
     clearSelected() {
       this.setData({

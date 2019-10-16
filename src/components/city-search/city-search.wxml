@@ -1,0 +1,26 @@
+<view class="search">
+	<view class="search_inner">
+		<icon class="search_inner-icon" type="search" size="16" />
+		<input
+		 value="{{inputValue}}"
+		 bindinput="inputChange"
+		 class="search_inner-input"
+		 type="text"
+		 focus="{{true}}"
+		 placeholder="中文或拼音首字母输入，如：西安 或 XA"
+		/>
+		<text class="search_inner-cancel" bindtap="hideSearch">取消</text>
+	</view>
+	<view class="search_list">
+		<view
+		 data-item="{{item}}"
+		 bindtap="selectCityItem"
+		 wx:for="{{searchCitys}}"
+		 wx:key="code"
+		 class="search_list-item"
+		>
+			{{item.name + ' (' + item.parents[item.parents.length - 1].name + ')'}}
+		</view>
+	</view>
+</view>
+

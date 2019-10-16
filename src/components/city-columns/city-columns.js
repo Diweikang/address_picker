@@ -36,6 +36,18 @@ Component({
           })
         }
       }
+    },
+    searchCity: {
+      type: Object,
+      value: {},
+      observer(newVal) {
+        if (newVal.code) {
+          const index = newVal.parents.length - 1
+          this.cityChangeBySearchCity(newVal.parents[index])
+          this.cityChangeBySearchCity(newVal)
+        }
+        console.log(this.data.citys)
+      }
     }
   },
   data: {
@@ -80,8 +92,8 @@ Component({
       this.addItemToTabArr(tabArr, selectedTab)
       this.updateTabArr(selectedTab, item, toView, tabArr, name)
       // 触发选中的事件
-      this.triggerEvent('select', item)
-      this.triggerEvent('clearHotChecked', selectedTab)
+      this.triggerEvent('getColumnValue', item)
+      this.triggerEvent('clearHotselected', selectedTab)
     },
     // 向tabArr中添加'请选择'元素
     addItemToTabArr(tabArr, selectedTab) {
@@ -146,6 +158,14 @@ Component({
       this.setData({
         citys
       })
+    },
+    // 当选中搜索后的城市后，城市列表的变化
+    cityChangeBySearchCity(item) {
+      const {selectedTab, tabArr} = this.data
+      const toView = `id${item.code}`
+      const name = 'tabArr[' + selectedTab + '].name'
+      this.addItemToTabArr(tabArr, selectedTab)
+      this.updateTabArr(selectedTab, item, toView, tabArr, name)
     }
   }
 })

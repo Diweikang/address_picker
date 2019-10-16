@@ -1,12 +1,23 @@
 <view class="address-picker">
-	<areas-group bind:change="onChange" groups="{{groups}}" />
-	<location/>
-	<hot-citys id="hotCity" bind:check="selectHotCity" hotCitys="{{hotCitys}}" />
-	<city-columns
-	 bind:select="getColumnValue"
-	 bind:clearHotChecked="clearHotChecked"
-	 hotCity="{{hotCity}}"
-	 cityColumns="{{cityColumns}}"
-	/>
+	<view wx:if="{{isShowSearch}}">
+		<areas-group bind:change="onChange" groups="{{groups}}" bind:showSearch="showSearch" />
+		<location/>
+		<hot-citys id="hotCity" bind:select="selectHotCity" hotCitys="{{hotCitys}}" />
+		<city-columns
+		 bind:getColumnValue="getColumnValue"
+		 bind:clearHotselected="clearHotChecked"
+		 hotCity="{{hotCity}}"
+		 searchCity="{{searchCity}}"
+		 cityColumns="{{cityColumns}}"
+		/>
+	</view>
+	<view wx:else>
+		<city-search
+		 searchCitys="{{searchCitys}}"
+		 bind:selectSearch="selectSearch"
+		 bind:hideSearch="hideSearch"
+		 bind:searching="querySearchCitys"
+		/>
+	</view>
 </view>
 
