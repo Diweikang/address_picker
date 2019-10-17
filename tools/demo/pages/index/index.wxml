@@ -1,9 +1,10 @@
 <view class="address-picker">
-	<view wx:if="{{isShowSearch}}">
+	<view wx:if="{{!isShowSearch}}">
 		<areas-group bind:change="onChange" groups="{{groups}}" bind:showSearch="showSearch" />
 		<location/>
 		<hot-citys id="hotCity" bind:select="selectHotCity" hotCitys="{{hotCitys}}" />
 		<city-columns
+		 bind:clearSearchCity="clearSearchCity"
 		 bind:getColumnValue="getColumnValue"
 		 bind:clearHotselected="clearHotChecked"
 		 hotCity="{{hotCity}}"

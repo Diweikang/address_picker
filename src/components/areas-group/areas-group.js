@@ -16,7 +16,7 @@ Component({
       this.triggerEvent('change', e.target.dataset.item)
     },
     clickInput() {
-      this.triggerEvent('showSearch', false)
+      this.triggerEvent('showSearch', true)
     }
   }
 })

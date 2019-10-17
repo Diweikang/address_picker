@@ -1,5 +1,6 @@
 Component({
   properties: {
+    // 城市列表数据发生变化
     cityColumns: {
       type: Array,
       value: [],
@@ -13,12 +14,14 @@ Component({
         }
       }
     },
+    // 选中热门城市的触发
     hotCity: {
       type: Object,
       value: {},
       observer(newVal) {
         if (newVal.code) {
           this.clearToView()
+          this.clearSearchCity()
           let {tabArr, selectedTab} = this.data
           tabArr = [
             {
@@ -37,16 +40,30 @@ Component({
         }
       }
     },
+    // 选中搜索的城市触发的事件
     searchCity: {
-      type: Object,
-      value: {},
+      type: Array,
+      value: [],
       observer(newVal) {
-        if (newVal.code) {
-          const index = newVal.parents.length - 1
-          this.cityChangeBySearchCity(newVal.parents[index])
-          this.cityChangeBySearchCity(newVal)
+        this.clearToView()
+        let {tabArr} = this.data
+        tabArr = [
+          {
+            name: '省/直辖市',
+            level: 0
+          }
+        ]
+        this.setData({
+          tabArr,
+          selectedTab: 0,
+          toView: '',
+          cityCode: ''
+        })
+        if (newVal.length > 0) {
+          newVal.forEach(item => {
+            this.cityChangeBySearchCity(item)
+          })
         }
-        console.log(this.data.citys)
       }
     }
   },
@@ -62,14 +79,35 @@ Component({
       }
     ]
   },
+  lifetimes: {
+    attached() {
+      if (!this.data.searchCity.length) {
+        this.initCitys()
+      }
+    }
+  },
   methods: {
+    // 初始化页面的省市区
+    initCitys() {
+      this.setData({
+        citys: {}
+      })
+      this.triggerEvent('getColumnValue')
+    },
     // 切换城市列表tab操作
     changeTab(e) {
-      const level = e.target.dataset.level
+      const index = e.target.dataset.level
       this.setData({
-        selectedTab: level
+        selectedTab: index
       })
-      this.getToView(level)
+      this.getToView(index)
+      // 有搜索数据时切换tab
+      const {selectedTab, searchCity} = this.data
+      if (searchCity.length > 0) {
+        const name = 'tabArr[' + selectedTab + '].name'
+        const level = 'tabArr[' + selectedTab + '].level'
+        this.setTabArr(name, level, searchCity[index])
+      }
     },
     // 选中城市列表中具体的城市
     slecteItem(e) {
@@ -127,33 +165,54 @@ Component({
     // 为城市选项添加toView属性
     setToView(selectedTab, code, toView) {
       const cityColumns = this.data.citys[selectedTab]
-      cityColumns.forEach(city => {
-        if (city.code === code) {
-          city.toView = toView
-        }
-      })
+      if (cityColumns) {
+        cityColumns.forEach(city => {
+          if (city.code === code) {
+            city.toView = toView
+          }
+        })
+      }
     },
     // 切换城市tab时定位toView
     getToView(level) {
       const cityColumns = this.data.citys[level]
-      cityColumns.forEach(city => {
-        if ('toView' in city) {
-          this.setData({
-            toView: city.toView,
-            cityCode: city.code
-          })
-        }
-      })
+      if (!cityColumns) {
+        const item = this.data.searchCity[level - 1]
+        this.triggerEvent('getColumnValue', item)
+        wx.nextTick(() => {
+          if (this.data.citys[level]) {
+            const toView = `id${item.code}`
+            this.setData({
+              toView,
+              cityCode: item.code
+            })
+          }
+        })
+      }
+      if (cityColumns) {
+        cityColumns.forEach(city => {
+          if ('toView' in city) {
+            this.setData({
+              toView: city.toView,
+              cityCode: city.code
+            })
+          }
+        })
+      }
     },
     // 清空citys中元素的toView属性
     clearToView() {
       const {citys} = this.data
-      for (const cityColumns of citys) {
-        cityColumns.forEach(city => {
-          if ('toView' in city) {
-            delete city.toView
+      if (citys.length > 0) {
+        for (const cityColumns of citys) {
+          if (cityColumns) {
+            cityColumns.forEach(city => {
+              if ('toView' in city) {
+                delete city.toView
+              }
+            })
           }
-        })
+        }
       }
       this.setData({
         citys
@@ -163,9 +222,14 @@ Component({
     cityChangeBySearchCity(item) {
       const {selectedTab, tabArr} = this.data
       const toView = `id${item.code}`
+      this.setToView(selectedTab, item.code, toView)
       const name = 'tabArr[' + selectedTab + '].name'
       this.addItemToTabArr(tabArr, selectedTab)
       this.updateTabArr(selectedTab, item, toView, tabArr, name)
+    },
+    // 清空搜索城市结果数据
+    clearSearchCity() {
+      this.triggerEvent('clearSearchCity')
     }
   }
 })

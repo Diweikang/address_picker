@@ -12,7 +12,10 @@ Component({
   methods: {
     // 点击取消时，隐藏搜索框
     hideSearch() {
-      this.triggerEvent('hideSearch', true)
+      this.triggerEvent('hideSearch', {
+        isShowSearch: false,
+        action: false
+      })
     },
     // 当输入框内容变化时进行搜索
     inputChange(e) {
@@ -23,7 +26,7 @@ Component({
       if (val) {
         const timer = setTimeout(() => {
           this.triggerEvent('searching', val)
-        }, 500)
+        }, 1000)
         this.setData({
           timer
         })
@@ -35,13 +38,21 @@ Component({
     selectCityItem(e) {
       const {item} = e.target.dataset
       const {name, parents} = item
+      const cityArr = []
       const inputValue = `${name}-${parents[parents.length - 1].name}`
       this.setData({
         inputValue
       })
+      cityArr.unshift(item)
+      if (item.parents.length >= 2) {
+        cityArr.unshift(item.parents[parents.length - 1])
+      }
       // 触发隐藏搜索框
-      this.triggerEvent('selectSearch', item)
-      this.triggerEvent('hideSearch', true)
+      this.triggerEvent('selectSearch', cityArr)
+      this.triggerEvent('hideSearch', {
+        isShowSearch: false,
+        action: true
+      })
     }
   }
 })
