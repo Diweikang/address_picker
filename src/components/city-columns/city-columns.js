@@ -162,6 +162,14 @@ Component({
         })
       }
     },
+    // 当有搜索数据时，设置toView和cityCode
+    setToviewAndCityCode(item) {
+      const toView = `id${item.code}`
+      this.setData({
+        toView,
+        cityCode: item.code
+      })
+    },
     // 为城市选项添加toView属性
     setToView(selectedTab, code, toView) {
       const cityColumns = this.data.citys[selectedTab]
@@ -177,19 +185,20 @@ Component({
     getToView(level) {
       const cityColumns = this.data.citys[level]
       if (!cityColumns) {
-        const item = this.data.searchCity[level - 1]
-        this.triggerEvent('getColumnValue', item)
-        wx.nextTick(() => {
-          if (this.data.citys[level]) {
-            const toView = `id${item.code}`
-            this.setData({
-              toView,
-              cityCode: item.code
-            })
-          }
+        this.setData({
+          citys: {}
         })
-      }
-      if (cityColumns) {
+        if (level) {
+          const item = this.data.searchCity[level - 1]
+          const tabItem = this.data.searchCity[level]
+          this.setToviewAndCityCode(tabItem)
+          this.triggerEvent('getColumnValue', item)
+        } else {
+          const tabItem = this.data.searchCity[level]
+          this.setToviewAndCityCode(tabItem)
+          this.triggerEvent('getColumnValue')
+        }
+      } else {
         cityColumns.forEach(city => {
           if ('toView' in city) {
             this.setData({
@@ -222,7 +231,6 @@ Component({
     cityChangeBySearchCity(item) {
       const {selectedTab, tabArr} = this.data
       const toView = `id${item.code}`
-      this.setToView(selectedTab, item.code, toView)
       const name = 'tabArr[' + selectedTab + '].name'
       this.addItemToTabArr(tabArr, selectedTab)
       this.updateTabArr(selectedTab, item, toView, tabArr, name)
