@@ -10,6 +10,23 @@ Component({
           this.setData({
             toView: `id${newVal[0].code}`,
             [selectedTab]: newVal
+          }, () => {
+            if (this.data.searchCity.length > 0) {
+              const level = this.data.selectedTab
+              if (level) {
+                const tabItem = this.data.searchCity[level]
+                this.setToviewAndCityCode(tabItem)
+              } else {
+                const tabItem = this.data.searchCity[level]
+                this.setToviewAndCityCode(tabItem)
+              }
+            }
+            if (this.data.hotCity.code && ((this.data.citys.length - 1) > selectedTab)) {
+              this.data.citys.splice(selectedTab + 1, 1)
+              this.setData({
+                citys: this.data.citys
+              })
+            }
           })
         }
       }
@@ -45,7 +62,6 @@ Component({
       type: Array,
       value: [],
       observer(newVal) {
-        this.clearToView()
         let {tabArr} = this.data
         tabArr = [
           {
@@ -63,6 +79,8 @@ Component({
           newVal.forEach(item => {
             this.cityChangeBySearchCity(item)
           })
+        } else {
+          this.initCitys()
         }
       }
     }
@@ -79,16 +97,12 @@ Component({
       }
     ]
   },
-  lifetimes: {
-    attached() {
-      if (!this.data.searchCity.length) {
-        this.initCitys()
-      }
-    }
-  },
   methods: {
     // 初始化页面的省市区
     initCitys() {
+      if (this.data.hotCity.code) {
+        return
+      }
       this.setData({
         citys: {}
       })
@@ -116,6 +130,14 @@ Component({
       const toView = `id${e.target.dataset.item.code}`
       const name = 'tabArr[' + selectedTab + '].name'
       const level = 'tabArr[' + selectedTab + '].level'
+      if (this.data.searchCity.length > 0) {
+        const searchCity = this.data.searchCity
+        searchCity.splice(selectedTab, 1, item)
+        this.triggerEvent('changeSearchCity', searchCity)
+        if (!selectedTab) {
+          this.clearSearchCity()
+        }
+      }
       // 对选中的城市对象添加toView属性
       this.setToView(selectedTab, item.code, toView)
       this.setTabArr(name, level, item)
@@ -190,12 +212,8 @@ Component({
         })
         if (level) {
           const item = this.data.searchCity[level - 1]
-          const tabItem = this.data.searchCity[level]
-          this.setToviewAndCityCode(tabItem)
           this.triggerEvent('getColumnValue', item)
         } else {
-          const tabItem = this.data.searchCity[level]
-          this.setToviewAndCityCode(tabItem)
           this.triggerEvent('getColumnValue')
         }
       } else {
@@ -232,6 +250,14 @@ Component({
       const {selectedTab, tabArr} = this.data
       const toView = `id${item.code}`
       const name = 'tabArr[' + selectedTab + '].name'
+      if (item.level > 3) {
+        this.setData({
+          [name]: item.name,
+          cityCode: item.code,
+          toView
+        })
+        return
+      }
       this.addItemToTabArr(tabArr, selectedTab)
       this.updateTabArr(selectedTab, item, toView, tabArr, name)
     },

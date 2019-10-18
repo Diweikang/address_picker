@@ -4,6 +4,7 @@
 		<location/>
 		<hot-citys id="hotCity" bind:select="selectHotCity" hotCitys="{{hotCitys}}" />
 		<city-columns
+		 bind:changeSearchCity="changeSearchCity"
 		 bind:clearSearchCity="clearSearchCity"
 		 bind:getColumnValue="getColumnValue"
 		 bind:clearHotselected="clearHotChecked"

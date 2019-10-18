@@ -12,7 +12,7 @@ Page({
   onLoad() {
     this.getGroup()
     this.getHotCity({type: 2, addressType: 2})
-    // this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
+    this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
   },
   // 获取地区分组数据
   getGroup() {
@@ -84,6 +84,9 @@ Page({
   },
   // 选中的城市
   getColumnValue(data, isSearch=true) {
+    if (this.data.searchCity.length > 0) {
+
+    }
     if (!isSearch) {
       let addressType = isSearch ? data.detail.addressType : data.addressType
       let groupCode = isSearch ? data.detail.groupCode : data.groupCode
@@ -126,7 +129,8 @@ Page({
     const {isShowSearch, action} = data.detail
     this.setData({
       isShowSearch,
-      searchCitys: []
+      searchCitys: [],
+      cityColumns: []
     })
     if (!action) {
       this.clearSearchCity()
@@ -135,11 +139,8 @@ Page({
   // 选中搜索结果项触发的事件
   selectSearch(data) {
     this.clearSearchCity()
-    data.detail.forEach(city => {
-      this.data.searchCity.push(city)
-      this.setData({
-        searchCity: this.data.searchCity
-      })
+    this.setData({
+      searchCity: data.detail
     })
     this.getColumnValue(data.detail[data.detail.length - 1], false)
   },
@@ -147,6 +148,11 @@ Page({
   clearSearchCity() {
     this.setData({
       searchCity: []
+    })
+  },
+  changeSearchCity(data) {
+    this.setData({
+      searchCity: data.detail
     })
   }
 })
