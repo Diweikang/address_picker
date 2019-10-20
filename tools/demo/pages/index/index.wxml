@@ -2,12 +2,19 @@
 	<view wx:if="{{!isShowSearch}}">
 		<areas-group bind:change="onChange" groups="{{groups}}" bind:showSearch="showSearch" />
 		<location/>
-		<hot-citys id="hotCity" bind:select="selectHotCity" hotCitys="{{hotCitys}}" />
+		<hot-citys
+		 wx:if="{{code === '0'}}"
+		 id="hotCity"
+		 bind:clearHotselected="clearHotChecked"
+		 bind:select="selectHotCity"
+		 hotCitys="{{hotCitys}}"
+		/>
 		<city-columns
 		 bind:changeSearchCity="changeSearchCity"
 		 bind:clearSearchCity="clearSearchCity"
 		 bind:getColumnValue="getColumnValue"
 		 bind:clearHotselected="clearHotChecked"
+		 areaType="{{areaType}}"
 		 hotCity="{{hotCity}}"
 		 searchCity="{{searchCity}}"
 		 cityColumns="{{cityColumns}}"
@@ -19,6 +26,7 @@
 		 bind:selectSearch="selectSearch"
 		 bind:hideSearch="hideSearch"
 		 bind:searching="querySearchCitys"
+		 bind:clearSearchCity="clearSearchCity"
 		/>
 	</view>
 </view>

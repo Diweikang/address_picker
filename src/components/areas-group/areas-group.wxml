@@ -4,7 +4,7 @@
 		<icon/>
 	</view>
 	<view class="areas_group-search">
-		<icon/>
+		<icon class="areas_group-search-icon" type="search" size="16" />
 		<input
 		 bindtap="clickInput"
 		 disabled="{{true}}"

@@ -85,6 +85,7 @@ module.exports = {
     'no-await-in-loop': 'off',
     'no-restricted-syntax': 'off',
     'promise/always-return': 'off',
+    'no-lonely-if': 'off'
   },
   'globals': {
     'window': true,

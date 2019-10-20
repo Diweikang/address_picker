@@ -7,12 +7,14 @@ Page({
     hotCity: {},
     isShowSearch: false,
     searchCitys: [],
-    searchCity: []
+    searchCity: [],
+    areaType: '省/直辖市',
+    code: '0'
   },
   onLoad() {
     this.getGroup()
     this.getHotCity({type: 2, addressType: 2})
-    this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
+    // this.getCityColumns({type: 2, addressType: 2, groupCode: 2, level: 1})
   },
   // 获取地区分组数据
   getGroup() {
@@ -44,15 +46,17 @@ Page({
     })
   },
   // 获取城市列表数据
-  getCityColumns({type, addressType, groupCode, level, isHot = false, pageSize = 10, parentCode=''}) {
+  getCityColumns({type, addressType, groupCode, level, isHot = false, pageSize = 10, parentCode}) {
     let data = {
       isHot,
       pageSize,
       type,
       groupCode,
       level,
-      addressType,
-      parentCode
+      addressType
+    }
+    if (parentCode) {
+      data = Object.assign(data, {parentCode})
     }
     get('/api/v1/areas/search', data).then(res => {
       this.data.cityColumns = res
@@ -80,15 +84,26 @@ Page({
   },
   // 绑定区域分组改变事件
   onChange(data) {
-    console.log(data)
+    const {detail} = data
+    if (detail.code === '0') {
+      this.setData({
+        areaType: '省/直辖市'
+      })
+    } else if (detail.code === '2') {
+      this.setData({
+        areaType: '国家'
+      })
+    }
+    this.setData({
+      code: detail.code
+    })
+    this.getCityColumns({type: 2, addressType: 2, groupCode: detail.code, level: 1})
   },
   // 选中的城市
   getColumnValue(data, isSearch=true) {
-    if (this.data.searchCity.length > 0) {
-
-    }
     if (!isSearch) {
-      let addressType = isSearch ? data.detail.addressType : data.addressType
+      // let addressType = isSearch ? data.detail.addressType : data.addressType
+      let addressType = 2
       let groupCode = isSearch ? data.detail.groupCode : data.groupCode
       let level = isSearch ? data.detail.level + 1 : data.level + 1
       let parentCode = isSearch ? data.detail.code : data.code
@@ -97,7 +112,8 @@ Page({
       if (!data.detail) {
         this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
       } else {
-        let addressType = isSearch ? data.detail.addressType : data.addressType
+        // let addressType = isSearch ? data.detail.addressType : data.addressType
+        let addressType = 2
         let groupCode = isSearch ? data.detail.groupCode : data.groupCode
         let level = isSearch ? data.detail.level + 1 : data.level + 1
         let parentCode = isSearch ? data.detail.code : data.code
@@ -116,6 +132,9 @@ Page({
   clearHotChecked(data) {
     if (data.detail == 0) {
       this.selectComponent("#hotCity").clearSelected()
+      this.setData({
+        hotCity: []
+      })
     }
   },
   // 当点击搜索框时触发的事件
@@ -126,23 +145,18 @@ Page({
   },
   // 当点击搜索页面的取消时，隐藏搜索页
   hideSearch(data) {
-    const {isShowSearch, action} = data.detail
     this.setData({
-      isShowSearch,
+      isShowSearch: data.detail,
       searchCitys: [],
       cityColumns: []
     })
-    if (!action) {
-      this.clearSearchCity()
-    }
   },
   // 选中搜索结果项触发的事件
   selectSearch(data) {
-    this.clearSearchCity()
     this.setData({
       searchCity: data.detail
     })
-    this.getColumnValue(data.detail[data.detail.length - 1], false)
+    this.getColumnValue(data.detail[data.detail.length - 2], false)
   },
   // 清空搜索城市结果数据
   clearSearchCity() {

@@ -46,14 +46,22 @@ Component({
               level: 0
             }
           ]
-          selectedTab = 0
-          this.addItemToTabArr(tabArr, selectedTab)
-          this.setData({
-            tabArr,
-            selectedTab: selectedTab + 1,
-            toView: '',
-            cityCode: ''
-          })
+          if (newVal.addressType === 2) {
+            selectedTab = 0
+            this.addItemToTabArr(tabArr, selectedTab)
+            this.setData({
+              tabArr,
+              selectedTab: selectedTab + 1,
+              toView: '',
+              cityCode: ''
+            })
+          } else {
+            this.setData({
+              selectedTab: 0,
+              toView: '',
+              cityCode: ''
+            })
+          }
         }
       }
     },
@@ -65,7 +73,7 @@ Component({
         let {tabArr} = this.data
         tabArr = [
           {
-            name: '省/直辖市',
+            name: this.data.areaType,
             level: 0
           }
         ]
@@ -79,9 +87,30 @@ Component({
           newVal.forEach(item => {
             this.cityChangeBySearchCity(item)
           })
-        } else {
-          this.initCitys()
         }
+      }
+    },
+    areaType: {
+      type: String,
+      value: '省/直辖市',
+      observer(newVal) {
+        this.setData({
+          citys: {}
+        })
+        let {tabArr} = this.data
+        tabArr = []
+        tabArr = [
+          {
+            name: newVal,
+            level: 0
+          }
+        ]
+        this.setData({
+          tabArr,
+          selectedTab: 0,
+          toView: '',
+          cityCode: ''
+        })
       }
     }
   },
@@ -90,19 +119,19 @@ Component({
     toView: '',
     cityCode: '',
     selectedTab: 0,
-    tabArr: [
-      {
-        name: '省/直辖市',
-        level: 0
+    tabArr: []
+  },
+  lifetimes: {
+    // 每次初始化获取省/直辖市
+    attached() {
+      if (!this.data.searchCity.length) {
+        this.initCitys()
       }
-    ]
+    }
   },
   methods: {
     // 初始化页面的省市区
     initCitys() {
-      if (this.data.hotCity.code) {
-        return
-      }
       this.setData({
         citys: {}
       })
@@ -141,19 +170,47 @@ Component({
       // 对选中的城市对象添加toView属性
       this.setToView(selectedTab, item.code, toView)
       this.setTabArr(name, level, item)
-      if (item.level > 3) {
-        this.setData({
-          [name]: item.name,
-          cityCode: item.code,
-          toView
-        })
+      if (this.addItemToEnd(name, toView, item)) {
         return
       }
       this.addItemToTabArr(tabArr, selectedTab)
       this.updateTabArr(selectedTab, item, toView, tabArr, name)
       // 触发选中的事件
       this.triggerEvent('getColumnValue', item)
-      this.triggerEvent('clearHotselected', selectedTab)
+      if (item.groupCode !== '2') {
+        this.triggerEvent('clearHotselected', selectedTab)
+      }
+    },
+    addItem(name, toView, item) {
+      this.setData({
+        [name]: item.name,
+        cityCode: item.code,
+        toView
+      })
+    },
+    // 根据空运/速递/国内/国际判断选择的层级
+    addItemToEnd(name, toView, item) {
+      // 如果是国际
+      if (item.groupCode === '2') {
+        if (item.level > 1) {
+          this.addItem(name, toView, item)
+          return true
+        }
+      } else {
+        // 如果是空运
+        if (item.addressType === 1) {
+          if (item.level > 2) {
+            this.addItem(name, toView, item)
+            return true
+          }
+        } else {
+          if (item.level > 3) {
+            this.addItem(name, toView, item)
+            return true
+          }
+        }
+      }
+      return false
     },
     // 向tabArr中添加'请选择'元素
     addItemToTabArr(tabArr, selectedTab) {
@@ -250,12 +307,7 @@ Component({
       const {selectedTab, tabArr} = this.data
       const toView = `id${item.code}`
       const name = 'tabArr[' + selectedTab + '].name'
-      if (item.level > 3) {
-        this.setData({
-          [name]: item.name,
-          cityCode: item.code,
-          toView
-        })
+      if (this.addItemToEnd(name, toView, item)) {
         return
       }
       this.addItemToTabArr(tabArr, selectedTab)
