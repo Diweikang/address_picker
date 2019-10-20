@@ -9,7 +9,9 @@ Page({
     searchCitys: [],
     searchCity: [],
     areaType: '省/直辖市',
-    code: '0'
+    code: '0',
+    title: '原寄地',
+    active: '内地'
   },
   onLoad() {
     this.getGroup()
@@ -95,7 +97,8 @@ Page({
       })
     }
     this.setData({
-      code: detail.code
+      code: detail.code,
+      active: detail.name
     })
     this.getCityColumns({type: 2, addressType: 2, groupCode: detail.code, level: 1})
   },
@@ -156,7 +159,7 @@ Page({
     this.setData({
       searchCity: data.detail
     })
-    this.getColumnValue(data.detail[data.detail.length - 2], false)
+    this.getColumnValue(data.detail[data.detail.length - 1], false)
   },
   // 清空搜索城市结果数据
   clearSearchCity() {

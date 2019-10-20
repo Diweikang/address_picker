@@ -11,20 +11,21 @@ Component({
             toView: `id${newVal[0].code}`,
             [selectedTab]: newVal
           }, () => {
-            if (this.data.searchCity.length > 0) {
-              const level = this.data.selectedTab
-              if (level) {
-                const tabItem = this.data.searchCity[level]
-                this.setToviewAndCityCode(tabItem)
-              } else {
-                const tabItem = this.data.searchCity[level]
-                this.setToviewAndCityCode(tabItem)
-              }
+            const {
+              searchCity,
+              selectedTab,
+              hotCity,
+              citys
+            } = this.data
+            if (searchCity.length > 0) {
+              const level = selectedTab
+              const tabItem = searchCity[level]
+              this.setToviewAndCityCode(tabItem)
             }
-            if (this.data.hotCity.code && ((this.data.citys.length - 1) > selectedTab)) {
-              this.data.citys.splice(selectedTab + 1, 1)
+            if (hotCity.name && ((citys.length - 1) > selectedTab)) {
+              citys.splice(selectedTab + 1, 1)
               this.setData({
-                citys: this.data.citys
+                citys
               })
             }
           })
@@ -36,7 +37,7 @@ Component({
       type: Object,
       value: {},
       observer(newVal) {
-        if (newVal.code) {
+        if (Object.keys(newVal).length > 0) {
           this.clearToView()
           this.clearSearchCity()
           let {tabArr, selectedTab} = this.data
@@ -92,7 +93,7 @@ Component({
     },
     areaType: {
       type: String,
-      value: '省/直辖市',
+      value: '',
       observer(newVal) {
         this.setData({
           citys: {}

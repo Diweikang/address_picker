@@ -24,7 +24,7 @@ Component({
     inputChange(e) {
       const val = e.detail.value
       if (this.data.timer) {
-        clearTimeout(this.timer)
+        clearTimeout(this.data.timer)
       }
       if (val) {
         const timer = setTimeout(() => {

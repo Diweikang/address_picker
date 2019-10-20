@@ -1,7 +1,14 @@
 <view class="address-picker">
 	<view wx:if="{{!isShowSearch}}">
-		<areas-group bind:change="onChange" groups="{{groups}}" bind:showSearch="showSearch" />
+		<areas-group 
+     title="{{title}}"
+     active="{{active}}"
+     groups="{{groups}}"
+     bind:change="onChange"
+     bind:showSearch="showSearch" />
+
 		<location/>
+
 		<hot-citys
 		 wx:if="{{code === '0'}}"
 		 id="hotCity"
@@ -9,6 +16,7 @@
 		 bind:select="selectHotCity"
 		 hotCitys="{{hotCitys}}"
 		/>
+
 		<city-columns
 		 bind:changeSearchCity="changeSearchCity"
 		 bind:clearSearchCity="clearSearchCity"
@@ -20,6 +28,7 @@
 		 cityColumns="{{cityColumns}}"
 		/>
 	</view>
+  <!-- 展示城市搜索部分 -->
 	<view wx:else>
 		<city-search
 		 searchCitys="{{searchCitys}}"

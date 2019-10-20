@@ -1,6 +1,6 @@
 <view class="areas_group">
 	<view class="areas_group-send">
-		<text>原寄地</text>
+		<text>{{title}}</text>
 		<icon/>
 	</view>
 	<view class="areas_group-search">
@@ -18,8 +18,8 @@
 		 bindtap="changeTab"
 		 data-item="{{item}}"
 		 wx:for="{{groups}}"
-		 wx:key="{{code}}"
-		 class="areas_group-tab-item {{selectedIndex == item.code ? 'active' : ''}}"
+		 wx:key="name"
+		 class="areas_group-tab-item {{active == item.name ? 'active' : ''}}"
 		>{{item.name}}
 		</view>
 	</view>
