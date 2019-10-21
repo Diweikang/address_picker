@@ -1,22 +1,54 @@
 import {get} from '../../api/city.js'
 Page({
   data: {
-    groups: [],
-    hotCitys: [],
-    cityColumns: [],
-    hotCity: {},
+    // 显示对话框
+    isShowDialog: true,
+    // 显示搜索框
     isShowSearch: false,
+    // 地区分组数据
+    groups: [],
+    // 热门城市数据
+    hotCitys: [],
+    // 城市列表数据
+    cityColumns: [],
+    // 选中的热门城市
+    hotCity: {},
+    // 搜索的城市列表
     searchCitys: [],
+    // 选中的搜索城市
     searchCity: [],
+    // 城市列表tab第一项默认值
     areaType: '省/直辖市',
     code: '0',
     title: '原寄地',
-    active: '内地'
+    active: '内地',
+    // 城市列表开始请求的层级
+    minLevel: 2,
+    // 城市列表最多请求层级
+    maxLevel: 3,
+    // 热门城市选中的name
+    selectedName: ''
   },
   onLoad() {
+    /**
+     * type: 1-目的地。 2-原寄地
+     * addressType: 1-空运。 2-速递。
+     * groupCode: 0-内地。 1-港澳台。 2-国际。
+     * level: 表示从那一层开始请求数据。
+     */
+    // 初始化获取地区分组
     this.getGroup()
+    // 初始化获取热门城市
     this.getHotCity({type: 2, addressType: 2})
-    // this.getCityColumns({type: 2, addressType: 2, groupCode: 2, level: 1})
+    // 初始化获取省/直辖市
+    this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
+  },
+  // 点击展示对话框
+  showDialog (e) {
+    this.setData({
+      isShowDialog: false,
+      title: e.target.dataset.title 
+    })
   },
   // 获取地区分组数据
   getGroup() {
@@ -89,11 +121,15 @@ Page({
     const {detail} = data
     if (detail.code === '0') {
       this.setData({
-        areaType: '省/直辖市'
+        areaType: '省/直辖市',
+        minLevel: 2,
+        maxLevel: 3
       })
     } else if (detail.code === '2') {
       this.setData({
-        areaType: '国家'
+        areaType: '国家',
+        minLevel: 1,
+        maxLevel: 2
       })
     }
     this.setData({
@@ -127,16 +163,18 @@ Page({
   // 当选中热门城市时
   selectHotCity(data) {
     this.setData({
-      hotCity: data.detail
+      hotCity: data.detail,
+      selectedName: data.detail.name,
+      maxLevel: 2
     })
     this.getColumnValue(data)
   },
   // 清空热门城市的选中
   clearHotChecked(data) {
-    if (data.detail == 0) {
-      this.selectComponent("#hotCity").clearSelected()
+    if (!data.detail) {
       this.setData({
-        hotCity: []
+        hotCity: [],
+        selectedName: ''
       })
     }
   },

@@ -2,7 +2,7 @@
 	<view class="city_columns-tab">
 		<view
 		 bindtap="changeTab"
-		 data-level="{{item.level}}"
+		 data-item="{{item}}"
 		 wx:for="{{tabArr}}"
 		 wx:key="level"
 		 class="city_columns-tabItem {{selectedTab == item.level ? 'active' : ''}}"

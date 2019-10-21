@@ -1,42 +1,52 @@
 <view class="address-picker">
-	<view wx:if="{{!isShowSearch}}">
-		<areas-group 
-     title="{{title}}"
-     active="{{active}}"
-     groups="{{groups}}"
-     bind:change="onChange"
-     bind:showSearch="showSearch" />
-
-		<location/>
-
-		<hot-citys
-		 wx:if="{{code === '0'}}"
-		 id="hotCity"
-		 bind:clearHotselected="clearHotChecked"
-		 bind:select="selectHotCity"
-		 hotCitys="{{hotCitys}}"
-		/>
-
-		<city-columns
-		 bind:changeSearchCity="changeSearchCity"
-		 bind:clearSearchCity="clearSearchCity"
-		 bind:getColumnValue="getColumnValue"
-		 bind:clearHotselected="clearHotChecked"
-		 areaType="{{areaType}}"
-		 hotCity="{{hotCity}}"
-		 searchCity="{{searchCity}}"
-		 cityColumns="{{cityColumns}}"
-		/>
+	<view wx:if="{{isShowDialog}}">
+		<view data-title="原寄地" class="address-send" bindtap="showDialog">原寄地</view>
+		<view data-title="目的地" class="address-receive" bindtap="showDialog">目的地</view>
 	</view>
-  <!-- 展示城市搜索部分 -->
 	<view wx:else>
-		<city-search
-		 searchCitys="{{searchCitys}}"
-		 bind:selectSearch="selectSearch"
-		 bind:hideSearch="hideSearch"
-		 bind:searching="querySearchCitys"
-		 bind:clearSearchCity="clearSearchCity"
-		/>
+		<view wx:if="{{!isShowSearch}}">
+			<!-- 地区部分 -->
+			<areas-group
+			 title="{{title}}"
+			 active="{{active}}"
+			 data="{{groups}}"
+			 bind:change="onChange"
+			 bind:showSearch="showSearch"
+			/>
+
+			<!-- 热门城市部分，内地才显示 -->
+			<hot-citys
+			 wx:if="{{code === '0'}}"
+			 data="{{hotCitys}}"
+			 active="{{selectedName}}"
+			 bind:clear="clearHotChecked"
+			 bind:select="selectHotCity"
+			/>
+
+			<!-- 城市列表部分 -->
+			<city-columns
+			 maxLevel="{{maxLevel}}"
+			 title="{{areaType}}"
+			 hotCity="{{hotCity}}"
+			 searchCity="{{searchCity}}"
+			 cityColumns="{{cityColumns}}"
+			 bind:changeSearchCity="changeSearchCity"
+			 bind:clearSearchCity="clearSearchCity"
+			 bind:getColumnValue="getColumnValue"
+			 bind:clear="clearHotChecked"
+			/>
+		</view>
+
+		<!-- 展示城市搜索部分 -->
+		<view wx:else>
+			<city-search
+			 searchCitys="{{searchCitys}}"
+			 bind:selectSearch="selectSearch"
+			 bind:hideSearch="hideSearch"
+			 bind:searching="querySearchCitys"
+			 bind:clearSearchCity="clearSearchCity"
+			/>
+		</view>
 	</view>
 </view>
 

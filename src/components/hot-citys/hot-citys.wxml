@@ -4,9 +4,9 @@
 		<view
 		 bindtap="selected"
 		 data-item="{{item}}"
-		 wx:for="{{hotCitys}}"
-		 wx:key="{{code}}"
-		 class="hotCity_city-item {{selectedCode == item.code ? 'active' : ''}}"
+		 wx:for="{{data}}"
+		 wx:key="name"
+		 class="hotCity_city-item {{active == item.name ? 'active' : ''}}"
 		>
 			{{item.name}}
 		</view>

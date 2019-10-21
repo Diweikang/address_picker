@@ -74,7 +74,7 @@ Component({
         let {tabArr} = this.data
         tabArr = [
           {
-            name: this.data.areaType,
+            name: this.data.title,
             level: 0
           }
         ]
@@ -91,7 +91,7 @@ Component({
         }
       }
     },
-    areaType: {
+    title: {
       type: String,
       value: '',
       observer(newVal) {
@@ -113,6 +113,9 @@ Component({
           cityCode: ''
         })
       }
+    },
+    maxLevel: {
+      type: Number
     }
   },
   data: {
@@ -140,105 +143,75 @@ Component({
     },
     // 切换城市列表tab操作
     changeTab(e) {
-      const index = e.target.dataset.level
+      const tab = e.target.dataset.item
       this.setData({
-        selectedTab: index
+        selectedTab: tab.level
       })
-      this.getToView(index)
+      this.getToView(tab)
       // 有搜索数据时切换tab
-      const {selectedTab, searchCity} = this.data
-      if (searchCity.length > 0) {
-        const name = 'tabArr[' + selectedTab + '].name'
-        const level = 'tabArr[' + selectedTab + '].level'
-        this.setTabArr(name, level, searchCity[index])
-      }
+      // const {selectedTab, searchCity} = this.data
+      // if (searchCity.length > 0) {
+      //   const name = 'tabArr[' + selectedTab + '].name'
+      //   const level = 'tabArr[' + selectedTab + '].level'
+      //   this.setTabArr(name, level, searchCity[index])
+      // }
     },
-    // 选中城市列表中具体的城市
+    // 选中城市列表中具体的城市，并返回选中的城市
     slecteItem(e) {
-      const {selectedTab, tabArr} = this.data
       const item = e.target.dataset.item
-      const toView = `id${e.target.dataset.item.code}`
+      const {selectedTab, tabArr, maxLevel} = this.data
+      const toView = `id${item.code}`
+      // tabArr中的属性
       const name = 'tabArr[' + selectedTab + '].name'
-      const level = 'tabArr[' + selectedTab + '].level'
-      if (this.data.searchCity.length > 0) {
-        const searchCity = this.data.searchCity
-        searchCity.splice(selectedTab, 1, item)
-        this.triggerEvent('changeSearchCity', searchCity)
-        if (!selectedTab) {
-          this.clearSearchCity()
-        }
-      }
-      // 对选中的城市对象添加toView属性
-      this.setToView(selectedTab, item.code, toView)
-      this.setTabArr(name, level, item)
-      if (this.addItemToEnd(name, toView, item)) {
+      const code = 'tabArr[' + selectedTab + '].code'
+      // if (this.data.searchCity.length > 0) {
+      //   const searchCity = this.data.searchCity
+      //   searchCity.splice(selectedTab, 1, item)
+      //   this.triggerEvent('changeSearchCity', searchCity)
+      //   if (!selectedTab) {
+      //     this.clearSearchCity()
+      //   }
+      // }
+      this.setTabArr()
+      if (tabArr.length >= maxLevel) {
+        this.addItem(name, toView, item, code)
         return
       }
       this.addItemToTabArr(tabArr, selectedTab)
-      this.updateTabArr(selectedTab, item, toView, tabArr, name)
+      this.addItem(name, toView, item, code)
       // 触发选中的事件
       this.triggerEvent('getColumnValue', item)
       if (item.groupCode !== '2') {
-        this.triggerEvent('clearHotselected', selectedTab)
+        this.triggerEvent('clear', selectedTab)
       }
     },
-    addItem(name, toView, item) {
+    addItem(name, toView, item, code) {
       this.setData({
         [name]: item.name,
+        [code]: item.code,
         cityCode: item.code,
         toView
       })
-    },
-    // 根据空运/速递/国内/国际判断选择的层级
-    addItemToEnd(name, toView, item) {
-      // 如果是国际
-      if (item.groupCode === '2') {
-        if (item.level > 1) {
-          this.addItem(name, toView, item)
-          return true
-        }
-      } else {
-        // 如果是空运
-        if (item.addressType === 1) {
-          if (item.level > 2) {
-            this.addItem(name, toView, item)
-            return true
-          }
-        } else {
-          if (item.level > 3) {
-            this.addItem(name, toView, item)
-            return true
-          }
-        }
-      }
-      return false
     },
     // 向tabArr中添加'请选择'元素
     addItemToTabArr(tabArr, selectedTab) {
       tabArr.push({
         name: '请选择',
-        level: selectedTab + 1
+        level: selectedTab + 1,
+        code: ''
       })
-    },
-    // 当选中城市后，tab对应更新为城市名
-    updateTabArr(selectedTab, item, toView, tabArr, name) {
       this.setData({
-        selectedTab: selectedTab + 1,
-        cityCode: item.code,
-        toView,
         tabArr,
-        [name]: item.name
+        selectedTab: selectedTab + 1
       })
     },
     // 修改选中的城市，对tabArr和城市列表进行修改
-    setTabArr(name, level, item) {
+    setTabArr() {
       const {selectedTab, tabArr} = this.data
       if (selectedTab < tabArr.length - 1) {
         tabArr.splice(selectedTab + 1, tabArr.length - 1)
         this.setData({
-          tabArr,
-          [name]: item.name,
-          [level]: selectedTab
+          tabArr
         })
       }
     },
@@ -250,39 +223,33 @@ Component({
         cityCode: item.code
       })
     },
-    // 为城市选项添加toView属性
-    setToView(selectedTab, code, toView) {
-      const cityColumns = this.data.citys[selectedTab]
-      if (cityColumns) {
-        cityColumns.forEach(city => {
-          if (city.code === code) {
-            city.toView = toView
-          }
-        })
-      }
-    },
     // 切换城市tab时定位toView
-    getToView(level) {
+    getToView(tab) {
+      const {level, code} = tab
       const cityColumns = this.data.citys[level]
       if (!cityColumns) {
-        this.setData({
-          citys: {}
-        })
-        if (level) {
-          const item = this.data.searchCity[level - 1]
-          this.triggerEvent('getColumnValue', item)
-        } else {
-          this.triggerEvent('getColumnValue')
-        }
+        // this.setData({
+        //   citys: {}
+        // })
+        // if (level) {
+        //   const item = this.data.searchCity[level - 1]
+        //   this.triggerEvent('getColumnValue', item)
+        // } else {
+        //   this.triggerEvent('getColumnValue')
+        // }
       } else {
-        cityColumns.forEach(city => {
-          if ('toView' in city) {
-            this.setData({
-              toView: city.toView,
-              cityCode: city.code
-            })
-          }
+        this.setData({
+          toView: `id${code}`,
+          cityCode: code
         })
+        // cityColumns.forEach(city => {
+        //   if ('toView' in city) {
+        //     this.setData({
+        //       toView: city.toView,
+        //       cityCode: city.code
+        //     })
+        //   }
+        // })
       }
     },
     // 清空citys中元素的toView属性

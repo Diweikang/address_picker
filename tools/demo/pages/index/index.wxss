@@ -1,3 +1,9 @@
-.areas-group_back {
-  height: 155px;
+.address-send, .address-receive {
+  border: 1px solid black;
+  width: 200px;
+  margin: 0 auto;
+  text-align: center;
+}
+.address-receive {
+  margin-top: 20px;
 }

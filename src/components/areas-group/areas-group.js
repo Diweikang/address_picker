@@ -1,6 +1,6 @@
 Component({
   properties: {
-    groups: { // 属性名
+    data: { // 属性名
       type: Array,
       value: []
     },

@@ -17,7 +17,7 @@
 		<view
 		 bindtap="changeTab"
 		 data-item="{{item}}"
-		 wx:for="{{groups}}"
+		 wx:for="{{data}}"
 		 wx:key="name"
 		 class="areas_group-tab-item {{active == item.name ? 'active' : ''}}"
 		>{{item.name}}
