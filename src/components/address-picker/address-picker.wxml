@@ -1,8 +1,0 @@
-<view class="address-picker">
-	<areas-group groups="{{groups}}" />
-	<view class="areas-group_back" />
-	<location/>
-	<hot-citys hotCitys="{{hotCitys}}" />
-	<city-columns cityColumns="{{cityColumns}}" />
-</view>
-
