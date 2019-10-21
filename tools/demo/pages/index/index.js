@@ -12,13 +12,14 @@ Page({
     // 城市列表数据
     cityColumns: [],
     // 选中的热门城市
-    hotCity: {},
+    selectedCity: {},
     // 搜索的城市列表
     searchCitys: [],
     // 选中的搜索城市
     searchCity: [],
     // 城市列表tab第一项默认值
     areaType: '省/直辖市',
+    // 区分内地和国际
     code: '0',
     title: '原寄地',
     active: '内地',
@@ -39,7 +40,7 @@ Page({
     // 初始化获取地区分组
     this.getGroup()
     // 初始化获取热门城市
-    this.getHotCity({type: 2, addressType: 2})
+    this.getHotCitys({type: 2, addressType: 2})
     // 初始化获取省/直辖市
     this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
   },
@@ -65,7 +66,7 @@ Page({
     })
   },
   // 获取热门城市数据
-  getHotCity({type, addressType, isHot = true, pageSize = 10}) {
+  getHotCitys({type, addressType, isHot = true, pageSize = 10}) {
     let data = {
       isHot,
       pageSize,
@@ -163,7 +164,7 @@ Page({
   // 当选中热门城市时
   selectHotCity(data) {
     this.setData({
-      hotCity: data.detail,
+      selectedCity: data.detail,
       selectedName: data.detail.name,
       maxLevel: 2
     })
@@ -173,7 +174,7 @@ Page({
   clearHotChecked(data) {
     if (!data.detail) {
       this.setData({
-        hotCity: [],
+        selectedCity: [],
         selectedName: ''
       })
     }

@@ -25,11 +25,11 @@
 
 			<!-- 城市列表部分 -->
 			<city-columns
+       title="{{areaType}}"
 			 maxLevel="{{maxLevel}}"
-			 title="{{areaType}}"
-			 hotCity="{{hotCity}}"
+			 selectedData="{{selectedCity}}"
 			 searchCity="{{searchCity}}"
-			 cityColumns="{{cityColumns}}"
+			 columns="{{cityColumns}}"
 			 bind:changeSearchCity="changeSearchCity"
 			 bind:clearSearchCity="clearSearchCity"
 			 bind:getColumnValue="getColumnValue"

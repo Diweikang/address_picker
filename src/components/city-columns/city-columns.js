@@ -1,7 +1,7 @@
 Component({
   properties: {
     // 城市列表数据发生变化
-    cityColumns: {
+    columns: {
       type: Array,
       value: [],
       observer(newVal) {
@@ -14,7 +14,7 @@ Component({
             const {
               searchCity,
               selectedTab,
-              hotCity,
+              selectedData,
               citys
             } = this.data
             if (searchCity.length > 0) {
@@ -22,7 +22,7 @@ Component({
               const tabItem = searchCity[level]
               this.setToviewAndCityCode(tabItem)
             }
-            if (hotCity.name && ((citys.length - 1) > selectedTab)) {
+            if (selectedData.name && ((citys.length - 1) > selectedTab)) {
               citys.splice(selectedTab + 1, 1)
               this.setData({
                 citys
@@ -33,18 +33,18 @@ Component({
       }
     },
     // 选中热门城市的触发
-    hotCity: {
+    selectedData: {
       type: Object,
       value: {},
       observer(newVal) {
         if (Object.keys(newVal).length > 0) {
-          this.clearToView()
           this.clearSearchCity()
-          let {tabArr, selectedTab} = this.data
+          let {tabArr, selectedTab, title} = this.data
           tabArr = [
             {
-              name: '省/直辖市',
-              level: 0
+              name: title,
+              level: 0,
+              code: ''
             }
           ]
           if (newVal.addressType === 2) {
@@ -103,7 +103,8 @@ Component({
         tabArr = [
           {
             name: newVal,
-            level: 0
+            level: 0,
+            code: ''
           }
         ]
         this.setData({
@@ -185,6 +186,7 @@ Component({
         this.triggerEvent('clear', selectedTab)
       }
     },
+    // 将选中的城市赋值给tabArr
     addItem(name, toView, item, code) {
       this.setData({
         [name]: item.name,
@@ -242,32 +244,12 @@ Component({
           toView: `id${code}`,
           cityCode: code
         })
-        // cityColumns.forEach(city => {
-        //   if ('toView' in city) {
-        //     this.setData({
-        //       toView: city.toView,
-        //       cityCode: city.code
-        //     })
-        //   }
-        // })
       }
     },
     // 清空citys中元素的toView属性
     clearToView() {
-      const {citys} = this.data
-      if (citys.length > 0) {
-        for (const cityColumns of citys) {
-          if (cityColumns) {
-            cityColumns.forEach(city => {
-              if ('toView' in city) {
-                delete city.toView
-              }
-            })
-          }
-        }
-      }
       this.setData({
-        citys
+        toView: ''
       })
     },
     // 当选中搜索后的城市后，城市列表的变化
