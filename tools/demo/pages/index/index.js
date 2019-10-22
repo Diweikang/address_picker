@@ -15,16 +15,12 @@ Page({
     selectedCity: {},
     // 搜索的城市列表
     searchCitys: [],
-    // 选中的搜索城市
-    searchCity: [],
     // 城市列表tab第一项默认值
     areaType: '省/直辖市',
     // 区分内地和国际
     code: '0',
     title: '原寄地',
     active: '内地',
-    // 城市列表开始请求的层级
-    minLevel: 2,
     // 城市列表最多请求层级
     maxLevel: 3,
     // 热门城市选中的name
@@ -125,9 +121,8 @@ Page({
       content: searchData.detail
     }
     return get('/api/v1/areas/search', data).then(res => {
-      this.data.searchCitys = res
       this.setData({
-        searchCitys: this.data.searchCitys
+        searchCitys: res
       })
       return res
     })
@@ -138,13 +133,11 @@ Page({
     if (detail.code === '0') {
       this.setData({
         areaType: '省/直辖市',
-        minLevel: 2,
         maxLevel: 3
       })
     } else if (detail.code === '2') {
       this.setData({
         areaType: '国家',
-        minLevel: 1,
         maxLevel: 2
       })
     }
@@ -156,11 +149,17 @@ Page({
   },
   // 选中的城市
   getColumnValue(data) {
+    let {selectedTab} = this.data
+    const {tabArr, maxLevel, selectedCity} = this.data
+    if (selectedCity && !selectedTab) {
+      this.setData({
+        maxLevel: 3
+      })
+      this.clearHotChecked()
+    }
     data.detail.type = 2
     data.detail.level += 1
     data.detail.parentCode = data.detail.code
-    let {selectedTab} = this.data
-    const {tabArr, maxLevel} = this.data
     this.setTabArr()
     if (tabArr.length >= maxLevel) {
       this.addItem(data.detail, selectedTab)
@@ -249,20 +248,13 @@ Page({
         [cityColumnsItem]: res
       })
     })
-    console.log(1111111111111)
-    console.log(selectedTab)
-    console.log(tabArr)
-    console.log(cityColumns)
-    console.log(2222222222222)
   },
   // 清空热门城市的选中
-  clearHotChecked(data) {
-    if (!data.detail) {
-      this.setData({
-        selectedCity: [],
-        selectedName: ''
-      })
-    }
+  clearHotChecked() {
+    this.setData({
+      selectedCity: {},
+      selectedName: ''
+    })
   },
   // 当点击搜索框时触发的事件
   showSearch(data) {
@@ -274,16 +266,33 @@ Page({
   hideSearch(data) {
     this.setData({
       isShowSearch: data.detail,
-      searchCitys: [],
-      cityColumns: []
+      searchCitys: []
     })
   },
   // 选中搜索结果项触发的事件
   selectSearch(data) {
+    const {detail} = data
+    // 初始化数据
+    this.clearHotChecked()
     this.setData({
-      searchCity: data.detail
+      tabArr: [],
+      selectedTab: 0,
+      cityCode: ''
     })
-    this.getColumnValue(data.detail[data.detail.length - 1], false)
+    let {selectedTab} = this.data
+    data.detail.type = 2
+    data.detail.level += 1
+    data.detail.parentCode = data.detail.code
+    this.getCityColumns(data.detail).then(res => {
+      this.addItem(data.detail, selectedTab)
+      selectedTab += 1
+      const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
+      this.setData({
+        [cityColumnsItem]: res,
+        selectedTab
+      })
+      this.addItemToTabArr(selectedTab)
+    })
   },
   // 清空搜索城市结果数据
   clearSearchCity() {

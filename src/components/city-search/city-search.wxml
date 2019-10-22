@@ -15,7 +15,7 @@
 		<view
 		 data-item="{{item}}"
 		 bindtap="selectCityItem"
-		 wx:for="{{searchCitys}}"
+		 wx:for="{{data}}"
 		 wx:key="code"
 		 class="search_list-item"
 		>

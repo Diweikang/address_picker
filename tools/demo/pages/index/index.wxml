@@ -34,18 +34,16 @@
 			 bind:changeSearchCity="changeSearchCity"
 			 bind:clearSearchCity="clearSearchCity"
 			 bind:getColumnValue="getColumnValue"
-			 bind:clear="clearHotChecked"
 			/>
 		</view>
 
 		<!-- 展示城市搜索部分 -->
 		<view wx:else>
 			<city-search
-			 searchCitys="{{searchCitys}}"
-			 bind:selectSearch="selectSearch"
-			 bind:hideSearch="hideSearch"
+			 data="{{searchCitys}}"
+			 bind:select="selectSearch"
+			 bind:hide="hideSearch"
 			 bind:searching="querySearchCitys"
-			 bind:clearSearchCity="clearSearchCity"
 			/>
 		</view>
 	</view>
