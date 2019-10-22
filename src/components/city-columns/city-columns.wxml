@@ -1,11 +1,12 @@
 <view class="city_columns">
 	<view class="city_columns-tab">
 		<view
+		 wx:if="{{tabs.length}}"
 		 bindtap="changeTab"
 		 data-item="{{item}}"
-		 wx:for="{{tabArr}}"
-		 wx:key="level"
-		 class="city_columns-tabItem {{selectedTab == item.level ? 'active' : ''}}"
+		 wx:for="{{tabs}}"
+		 wx:key="index"
+		 class="city_columns-tabItem {{selectedTab == index ? 'active' : ''}}"
 		>
 			{{item.name}}
 		</view>
@@ -13,15 +14,15 @@
 			确定
 		</view>
 	</view>
-	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{toView}}">
+	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{'id' + active}}">
 		<view
-		 wx:if="{{citys[selectedTab].length}}"
+		 wx:if="{{columns[selectedTab].length}}"
 		 data-item="{{item}}"
 		 bindtap="slecteItem"
-		 wx:for="{{citys[selectedTab]}}"
+		 wx:for="{{columns[selectedTab]}}"
 		 wx:key="code"
-		 id="{{ 'id' + item.code}}"
-		 class="city_columns-item {{cityCode == item.code ? 'active_item' : ''}}"
+		 id="{{ 'id' + item.id}}"
+		 class="city_columns-item {{active == item.id ? 'active_item' : ''}}"
 		>
 			{{item.name}}
 		</view>

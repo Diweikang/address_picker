@@ -10,7 +10,7 @@ Page({
     // 热门城市数据
     hotCitys: [],
     // 城市列表数据
-    cityColumns: [],
+    cityColumns: {},
     // 选中的热门城市
     selectedCity: {},
     // 搜索的城市列表
@@ -28,7 +28,18 @@ Page({
     // 城市列表最多请求层级
     maxLevel: 3,
     // 热门城市选中的name
-    selectedName: ''
+    selectedName: '',
+    // 城市列表顶部tab
+    tabArr: [
+      {
+        name: '省/直辖市',
+        level: 0,
+        code: ''
+      }
+    ],
+    // 城市列表选中的tab
+    selectedTab: 0,
+    cityCode: ''
   },
   onLoad() {
     /**
@@ -42,7 +53,12 @@ Page({
     // 初始化获取热门城市
     this.getHotCitys({type: 2, addressType: 2})
     // 初始化获取省/直辖市
-    this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
+    this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2}).then(data => {
+      const cityColumnsItem = 'cityColumns[' + this.data.selectedTab + ']'
+      this.setData({
+        [cityColumnsItem]: data
+      })
+    })
   },
   // 点击展示对话框
   showDialog (e) {
@@ -93,10 +109,9 @@ Page({
     if (parentCode) {
       data = Object.assign(data, {parentCode})
     }
-    get('/api/v1/areas/search', data).then(res => {
-      this.data.cityColumns = res
-      this.setData({
-        cityColumns: this.data.cityColumns
+    return get('/api/v1/areas/search', data).then(res => {
+      return res.map(item => {
+        return Object.assign(item, {id: item.code})
       })
     })
   },
@@ -140,35 +155,105 @@ Page({
     this.getCityColumns({type: 2, addressType: 2, groupCode: detail.code, level: 1})
   },
   // 选中的城市
-  getColumnValue(data, isSearch=true) {
-    if (!isSearch) {
-      // let addressType = isSearch ? data.detail.addressType : data.addressType
-      let addressType = 2
-      let groupCode = isSearch ? data.detail.groupCode : data.groupCode
-      let level = isSearch ? data.detail.level + 1 : data.level + 1
-      let parentCode = isSearch ? data.detail.code : data.code
-      this.getCityColumns({type: 2, addressType, groupCode, level, parentCode})
+  getColumnValue(data) {
+    data.detail.type = 2
+    data.detail.level += 1
+    data.detail.parentCode = data.detail.code
+    let {selectedTab} = this.data
+    const {tabArr, maxLevel} = this.data
+    this.setTabArr()
+    if (tabArr.length >= maxLevel) {
+      this.addItem(data.detail, selectedTab)
     } else {
-      if (!data.detail) {
-        this.getCityColumns({type: 2, addressType: 2, groupCode: 0, level: 2})
-      } else {
-        // let addressType = isSearch ? data.detail.addressType : data.addressType
-        let addressType = 2
-        let groupCode = isSearch ? data.detail.groupCode : data.groupCode
-        let level = isSearch ? data.detail.level + 1 : data.level + 1
-        let parentCode = isSearch ? data.detail.code : data.code
-        this.getCityColumns({type: 2, addressType, groupCode, level, parentCode})
-      }
+      this.getCityColumns(data.detail).then(res => {
+        this.addItem(data.detail, selectedTab)
+        selectedTab += 1
+        const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
+        this.setData({
+          [cityColumnsItem]: res,
+          selectedTab
+        })
+        this.addItemToTabArr(selectedTab)
+      })
     }
+  },
+  // 向tabArr末尾添加'请选择'
+  addItemToTabArr(selectedTab) {
+    const {tabArr} = this.data
+    tabArr.push({
+      name: '请选择',
+      level: selectedTab,
+      code: ''
+    })
+    this.setData({
+      tabArr
+    })
+  },
+  // 将选中的城市赋值给tabArr
+  addItem(item, selectedTab) {
+    const name = 'tabArr[' + selectedTab + '].name'
+    const code = 'tabArr[' + selectedTab + '].code'
+    this.setData({
+      [name]: item.name,
+      [code]: item.code,
+      cityCode: item.code
+    })
+  },
+  // 修改选中的城市，对tabArr和城市列表进行修改
+  setTabArr() {
+    const {selectedTab, tabArr, cityColumns} = this.data
+    if (selectedTab < tabArr.length - 1) {
+      tabArr.splice(selectedTab + 1, tabArr.length - 1)
+      cityColumns.splice(selectedTab + 1, cityColumns.length - 1)
+      this.setData({
+        tabArr,
+        cityColumns
+      })
+    }
+  },
+  // 当切换城市列表顶部tab时候
+  changeTabArr(data) {
+    const {detail} = data
+    this.setData({
+      cityCode: detail.code,
+      selectedTab: detail.level
+    })
   },
   // 当选中热门城市时
   selectHotCity(data) {
+    data.detail.type = 2
+    data.detail.level += 1
+    data.detail.parentCode = data.detail.code
+    let {tabArr, selectedTab, cityColumns} = this.data
+    const {areaType} = this.data
+    tabArr = [
+      {
+        name: areaType,
+        level: 0,
+        code: ''
+      }
+    ]
+    selectedTab = 1
     this.setData({
+      tabArr,
       selectedCity: data.detail,
       selectedName: data.detail.name,
-      maxLevel: 2
+      maxLevel: 2,
+      selectedTab
     })
-    this.getColumnValue(data)
+    this.addItemToTabArr(selectedTab)
+    cityColumns.splice(selectedTab, cityColumns.length - 1)
+    this.getCityColumns(data.detail).then(res => {
+      const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
+      this.setData({
+        [cityColumnsItem]: res
+      })
+    })
+    console.log(1111111111111)
+    console.log(selectedTab)
+    console.log(tabArr)
+    console.log(cityColumns)
+    console.log(2222222222222)
   },
   // 清空热门城市的选中
   clearHotChecked(data) {
