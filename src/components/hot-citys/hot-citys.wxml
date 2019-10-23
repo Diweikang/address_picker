@@ -2,7 +2,7 @@
 	<view class="hotCity_text">热门城市</view>
 	<view class="hotCity_city">
 		<view
-		 bindtap="selected"
+		 bindtap="select"
 		 data-item="{{item}}"
 		 wx:for="{{data}}"
 		 wx:key="name"

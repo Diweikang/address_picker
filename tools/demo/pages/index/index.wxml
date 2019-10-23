@@ -25,14 +25,13 @@
 
 			<!-- 城市列表部分 -->
 			<city-columns
-			 selectedTab="{{selectedTab}}"
 			 tabs="{{tabArr}}"
+			 selectedTab="{{selectedTab}}"
 			 active="{{cityCode}}"
+			 toView="{{toView}}"
 			 selectedData="{{selectedCity}}"
 			 columns="{{cityColumns}}"
 			 bind:change="changeTabArr"
-			 bind:changeSearchCity="changeSearchCity"
-			 bind:clearSearchCity="clearSearchCity"
 			 bind:getColumnValue="getColumnValue"
 			/>
 		</view>

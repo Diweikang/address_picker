@@ -10,11 +10,11 @@
 		>
 			{{item.name}}
 		</view>
-		<view class="city_columns-confirm">
+		<view class="city_columns-confirm" bindtap="confirm">
 			确定
 		</view>
 	</view>
-	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{'id' + active}}">
+	<scroll-view scroll-y="true" class="city_columns-inner" scroll-into-view="{{'id' + toView}}">
 		<view
 		 wx:if="{{columns[selectedTab].length}}"
 		 data-item="{{item}}"

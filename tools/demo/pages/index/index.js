@@ -11,7 +11,7 @@ Page({
     hotCitys: [],
     // 城市列表数据
     cityColumns: {},
-    // 选中的热门城市
+    // 选中的城市
     selectedCity: {},
     // 搜索的城市列表
     searchCitys: [],
@@ -35,7 +35,8 @@ Page({
     ],
     // 城市列表选中的tab
     selectedTab: 0,
-    cityCode: ''
+    cityCode: '',
+    toView: ''
   },
   onLoad() {
     /**
@@ -70,7 +71,7 @@ Page({
       addressType: 2,
       isProduct: true
     }
-    get('/api/v1/areas/search/group', data).then(res => {
+    get('/api/v1/product/areas/search/group', data).then(res => {
       this.data.groups = res
       this.setData({
         groups: this.data.groups
@@ -85,7 +86,7 @@ Page({
       type,
       addressType
     }
-    get('/api/v1/areas/search', data).then(res => {
+    get('/api/v1/product/areas/search', data).then(res => {
       this.data.hotCitys = res
       this.setData({
         hotCitys: this.data.hotCitys
@@ -105,7 +106,7 @@ Page({
     if (parentCode) {
       data = Object.assign(data, {parentCode})
     }
-    return get('/api/v1/areas/search', data).then(res => {
+    return get('/api/v1/product/areas/search', data).then(res => {
       return res.map(item => {
         return Object.assign(item, {id: item.code})
       })
@@ -120,7 +121,7 @@ Page({
       addressType: 2,
       content: searchData.detail
     }
-    return get('/api/v1/areas/search', data).then(res => {
+    return get('/api/v1/product/areas/search', data).then(res => {
       this.setData({
         searchCitys: res
       })
@@ -170,7 +171,8 @@ Page({
         const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
         this.setData({
           [cityColumnsItem]: res,
-          selectedTab
+          selectedTab,
+          toView: res[0].id
         })
         this.addItemToTabArr(selectedTab)
       })
@@ -192,10 +194,13 @@ Page({
   addItem(item, selectedTab) {
     const name = 'tabArr[' + selectedTab + '].name'
     const code = 'tabArr[' + selectedTab + '].code'
+    const level = 'tabArr[' + selectedTab + '].level'
     this.setData({
       [name]: item.name,
       [code]: item.code,
-      cityCode: item.code
+      [level]: selectedTab,
+      cityCode: item.code,
+      toView: item.code
     })
   },
   // 修改选中的城市，对tabArr和城市列表进行修改
@@ -215,6 +220,7 @@ Page({
     const {detail} = data
     this.setData({
       cityCode: detail.code,
+      toView: detail.code,
       selectedTab: detail.level
     })
   },
@@ -271,38 +277,46 @@ Page({
   },
   // 选中搜索结果项触发的事件
   selectSearch(data) {
-    const {detail} = data
     // 初始化数据
     this.clearHotChecked()
+    this.initData()
+    let {selectedTab} = this.data
+    let searchCitys = this.addTabArrBySearchCity(data)
+    searchCitys.forEach(city => {
+      city = this.formatDetail(city)
+      this.getCityColumns(city).then(res => {
+        this.addItem(city, selectedTab)
+        selectedTab += 1
+        const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
+        this.setData({
+          [cityColumnsItem]: res,
+          selectedTab
+        })
+        this.addItemToTabArr(selectedTab)
+      })
+    })
+  },
+  // 搜索后数据对tabArr修改
+  addTabArrBySearchCity(data) {
+    const {detail} = data
+    let searchCitys = []
+    searchCitys.push(detail.parents[1])
+    searchCitys.push(detail)
+    return searchCitys
+  },
+  // 初始化数据
+  initData() {
     this.setData({
       tabArr: [],
       selectedTab: 0,
-      cityCode: ''
-    })
-    let {selectedTab} = this.data
-    data.detail.type = 2
-    data.detail.level += 1
-    data.detail.parentCode = data.detail.code
-    this.getCityColumns(data.detail).then(res => {
-      this.addItem(data.detail, selectedTab)
-      selectedTab += 1
-      const cityColumnsItem = 'cityColumns[' + selectedTab + ']'
-      this.setData({
-        [cityColumnsItem]: res,
-        selectedTab
-      })
-      this.addItemToTabArr(selectedTab)
+      cityCode: '',
+      toView: ''
     })
   },
-  // 清空搜索城市结果数据
-  clearSearchCity() {
-    this.setData({
-      searchCity: []
-    })
-  },
-  changeSearchCity(data) {
-    this.setData({
-      searchCity: data.detail
-    })
+  formatDetail(detail) {
+    detail.type = 2
+    detail.level += 1
+    detail.parentCode = detail.code
+    return detail
   }
 })

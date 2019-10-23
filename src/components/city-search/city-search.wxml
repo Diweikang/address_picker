@@ -16,7 +16,7 @@
 		 data-item="{{item}}"
 		 bindtap="selectCityItem"
 		 wx:for="{{data}}"
-		 wx:key="code"
+		 wx:key="index"
 		 class="search_list-item"
 		>
 			{{item.name + ' (' + item.parents[item.parents.length - 1].name + ')'}}

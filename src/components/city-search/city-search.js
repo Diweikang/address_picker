@@ -1,6 +1,7 @@
 Component({
   properties: {
-    data: { // 属性名
+    // 搜索数据结果
+    data: {
       type: Array,
       value: []
     }
@@ -34,18 +35,6 @@ Component({
     // 选中具体的城市
     selectCityItem(e) {
       const {item} = e.target.dataset
-      // const {name, parents} = item
-      // const cityArr = []
-      // const inputValue = `${name}-${parents[parents.length - 1].name}`
-      // this.setData({
-      //   inputValue
-      // })
-      // cityArr.unshift(item)
-      // if (item.parents.length >= 2) {
-      //   cityArr.unshift(item.parents[parents.length - 1])
-      // } else {
-      //   cityArr.unshift(item.parents[parents.length - 1])
-      // }
       // 触发隐藏搜索框
       this.triggerEvent('select', item)
       this.triggerEvent('hide', false)

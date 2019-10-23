@@ -1,22 +1,19 @@
 Component({
   properties: {
+    // 数据结果
     data: {
       type: Array,
       value: []
     },
+    // 选中项
     active: {
       type: String,
       value: ''
     }
   },
-  lifetimes: {
-    // 每次初始化清空选中的热门城市数据
-    attached() {
-      this.triggerEvent('clear')
-    }
-  },
   methods: {
-    selected(e) {
+    // 选中具体选项触发事件
+    select(e) {
       const {item} = e.target.dataset
       this.triggerEvent('select', item)
     }
