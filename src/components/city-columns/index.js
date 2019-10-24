@@ -2,8 +2,8 @@ Component({
   properties: {
     // 城市列表数据
     columns: {
-      type: Array,
-      value: []
+      type: Object,
+      value: {}
     },
     // 被激活的城市
     active: {
