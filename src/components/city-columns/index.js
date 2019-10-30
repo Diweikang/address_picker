@@ -24,11 +24,6 @@ Component({
     selectedTab: {
       type: Number,
       value: 0
-    },
-    // 传递进来的城市
-    selectedData: {
-      type: Object,
-      value: {}
     }
   },
   methods: {

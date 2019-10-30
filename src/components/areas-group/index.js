@@ -14,6 +14,11 @@ Component({
     active: {
       type: String,
       value: ''
+    },
+    // 搜索框需要回显的结果
+    value: {
+      type: String,
+      value: ''
     }
   },
   methods: {
