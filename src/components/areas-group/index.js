@@ -29,6 +29,10 @@ Component({
     // 点击搜索框显示
     clickInput() {
       this.triggerEvent('showSearch', true)
+    },
+    // 点击关闭按钮触发的事件
+    close() {
+      this.triggerEvent('close')
     }
   }
 })

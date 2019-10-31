@@ -12,6 +12,7 @@
 			 data="{{groups}}"
 			 bind:change="onChange"
 			 bind:showSearch="showSearch"
+			 bind:close="close"
 			/>
 
 			<!-- 热门城市部分，内地才显示 -->

@@ -1,3 +1,4 @@
+@import '../../assets/icons';
 @font16: 16px;
 @font14: 14px;
 @font15: 15px;
@@ -12,9 +13,6 @@
 .areas_group {
   font-size: @font16;
   font-family: @fontFamily;
-  position: fixed;
-  left: 0;
-  right: 0;
   background-color: #fff;
   box-shadow: 4px 4px 2px rgba(246,246,246,1);
   .areas_group-send {
@@ -23,6 +21,11 @@
     justify-content: center;
     align-items: center;
     color: @color6;
+    .areas_group-close {
+      position: absolute;
+      right: 17px;
+      color: rgba(0,0,0,1);
+    }
   }
   .areas_group-search {
     position: relative;
@@ -41,7 +44,7 @@
       border-radius:6px;
       padding-left: 38px;
       font-size: @font14;
-      color: @color5;
+      color: @color1;
     }
   }
   .areas_group-tab {

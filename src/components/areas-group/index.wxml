@@ -1,7 +1,7 @@
 <view class="areas_group">
 	<view class="areas_group-send">
 		<text>{{title}}</text>
-		<icon/>
+		<view bindtap="close" class="areas_group-close iconfont iconoms-sp---guanbi" />
 	</view>
 	<view class="areas_group-search">
 		<icon class="areas_group-search-icon" type="search" size="16" />
@@ -25,5 +25,4 @@
 		</view>
 	</view>
 </view>
-<view class="areas-group_back" />
 

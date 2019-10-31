@@ -318,5 +318,9 @@ Page({
     detail.level += 1
     detail.parentCode = detail.code
     return detail
+  },
+  // 点击关闭图标触发的事件
+  close() {
+    console.log(11111111111111)
   }
 })

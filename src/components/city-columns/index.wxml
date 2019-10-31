@@ -8,6 +8,7 @@
 		 wx:key="index"
 		 class="city_columns-tabItem {{selectedTab == index ? 'active' : ''}}"
 		>
+			<view wx:if="{{selectedTab == index}}" class="city_columns-tab-dot" />
 			{{item.name}}
 		</view>
 		<view class="city_columns-confirm" bindtap="confirm">
