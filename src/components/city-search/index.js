@@ -24,7 +24,7 @@ Component({
       if (val) {
         const timer = setTimeout(() => {
           this.triggerEvent('searching', val)
-        }, 1000)
+        }, 600)
         this.setData({
           timer
         })
