@@ -16,6 +16,10 @@ Component({
     select(e) {
       const {item} = e.target.dataset
       this.triggerEvent('select', item)
+    },
+    // 点击确定时，触发的事件
+    confirm() {
+      this.triggerEvent('confirm')
     }
   }
 })

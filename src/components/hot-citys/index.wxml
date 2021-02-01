@@ -1,5 +1,8 @@
 <view class="hotCity">
-	<view class="hotCity_text">热门城市</view>
+	<view class="hotCity_text">
+		<text>热门城市</text>
+		<view class="hot-confirm" bindtap="confirm">确定</view>
+	</view>
 	<view class="hotCity_city">
 		<view
 		 bindtap="select"
