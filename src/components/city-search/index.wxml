@@ -19,7 +19,7 @@
 		 wx:key="index"
 		 class="search_list-item"
 		>
-			{{item.name + ' (' + item.parents[item.parents.length - 1].name + ')'}}
+			{{item.parents ? item.name + ' (' + item.parents[item.parents.length - 1].name + ')' : item.name}}
 		</view>
 	</view>
 </view>
